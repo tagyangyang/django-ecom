@@ -1,0 +1,12 @@
+#!/bin/sh
+'''exec' '/Users/yangyang22/github.com/tagyangyang/django-ecommerce-project/Part-01 Django Models Views and Testing/Part-1 Initial/venv/bin/python3' "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import sys
+from mcp_server.server import mcp
+if __name__ == "__main__":
+    if sys.argv[0].endswith("-script.pyw"):
+        sys.argv[0] = sys.argv[0][:-11]
+    elif sys.argv[0].endswith(".exe"):
+        sys.argv[0] = sys.argv[0][:-4]
+    sys.exit(mcp.run())
