@@ -5,7 +5,7 @@ from django.urls import reverse
 
 class ProductManager(models.Manager):
     def get_queryset(self):
-        return super(ProductManager, self).get_queryset().filter(is_active=True)
+        return super().get_queryset().filter(is_active=True).select_related('category', 'created_by')
 
 
 class Category(models.Model):
@@ -23,17 +23,17 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_creator')
-    title = models.CharField(max_length=255)
+    category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE, db_index=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_creator', db_index=True)
+    title = models.CharField(max_length=255, db_index=True)
     author = models.CharField(max_length=255, default='admin')
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='images/')
-    slug = models.SlugField(max_length=255)
-    price = models.DecimalField(max_digits=4, decimal_places=2)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     in_stock = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
     updated = models.DateTimeField(auto_now=True)
     objects = models.Manager()
     products = ProductManager()
