@@ -11,6 +11,10 @@ class ProductManager(models.Manager):
 class Category(models.Model):
     name = models.CharField(max_length=255, db_index=True)
     slug = models.SlugField(max_length=255, unique=True)
+    description = models.TextField(blank=True, help_text='Category description for SEO')
+    is_active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'categories'
@@ -23,14 +27,16 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='product_creator')
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255, default='admin')
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='images/')
-    slug = models.SlugField(max_length=255)
-    price = models.DecimalField(max_digits=4, decimal_places=2)
+    image = models.ImageField(upload_to='images/', help_text='Recommended size: 800x600px')
+    slug = models.SlugField(max_length=255, unique=True)
+    sku = models.CharField(max_length=20, unique=True, help_text='Stock Keeping Unit')
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    sales_count = models.IntegerField(default=0, help_text='Total sales count')
     in_stock = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
