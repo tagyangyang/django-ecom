@@ -1,1 +1,14 @@
 .comate
+*.pyc
+*.sqlite3
+*.pyo
+*.orig
+*.rej
+__pycache__/
+*.egg-info/
+.venv/
+venv/
+env/
+.idea/
+.vscode/
+.DS_Store
